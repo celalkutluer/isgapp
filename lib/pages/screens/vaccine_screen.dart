@@ -7,6 +7,6 @@ class VaccineScreen extends StatefulWidget {
 class _VaccineScreenState extends State<VaccineScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(child: Text('Aşı'),);
   }
 }

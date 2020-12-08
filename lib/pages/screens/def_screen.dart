@@ -7,6 +7,6 @@ class DefinitionScreen extends StatefulWidget {
 class _DefinitionScreenState extends State<DefinitionScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(child: Text('Tanımlamalar'),);
   }
 }

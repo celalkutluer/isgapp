@@ -7,6 +7,6 @@ class ExaminationScreen extends StatefulWidget {
 class _ExaminationScreenState extends State<ExaminationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(child: Text('Muayene'),);
   }
 }
