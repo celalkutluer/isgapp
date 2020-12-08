@@ -27,6 +27,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   crypto: ^2.1.5
   basic_utils: ^1.5.0
+  material_design_icons_flutter: ^4.0.5755
 
 
   # The following adds the Cupertino Icons font to your application.

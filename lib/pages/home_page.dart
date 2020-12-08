@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:isgapp/pages/login_page.dart';
+import './login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import './screens/home_screen.dart';
+import './screens/edu_screen.dart';
+import './screens/exam_screen.dart';
+import './screens/vaccine_screen.dart';
+import './screens/def_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,31 +16,67 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SharedPreferences sharedPreferences;
+  int _currentIndex = 0;
+
+  final tabs = [
+    HomeScreen(),
+    EducationScreen(),
+    ExaminationScreen(),
+    VaccineScreen(),
+    DefinitionScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            Text("ISG APP", style: TextStyle(color: Colors.white)),
-
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
+      body: tabs[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+              backgroundColor: Colors.blue,
+              icon: Icon(Icons.home),
+              label: 'Anasayfa'),
+          BottomNavigationBarItem(
+            backgroundColor: Colors.blueGrey,
+            icon: Icon(Icons.school),
+            label: 'Eğitim İşlemleri',
+          ),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.teal,
+              icon: Icon(MdiIcons.stethoscope),
+              label: 'Muayene İşlemleri'),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.lightBlue,
+              icon: Icon(MdiIcons.needle),
+              label: 'Aşı İşlemleri'),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.deepPurple,
+              icon: Icon(Icons.settings),
+              label: 'Tanımlamalar'),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.deepPurple,
+              icon: Icon(Icons.exit_to_app),
+              label: 'Çıkış'),
+        ],
+        onTap: (index) {
+          setState(() {
+            if (index != 5) {
+              _currentIndex = index;
+            } else {
               clearPref();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                       builder: (BuildContext context) => LoginPage()),
-                  (Route<dynamic> route) => false);
-            },
-            child: Text("Çıkış", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+                      (Route<dynamic> route) => false);
+            }
+          });
+        },
       ),
-      body: Center(child: Text("Ana Sayfa")),
       //drawer: Drawer(),
     );
   }
+
 
   Future clearPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
