@@ -40,16 +40,16 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             backgroundColor: Colors.blueGrey,
             icon: Icon(Icons.school),
-            label: 'Eğitim İşlemleri',
+            label: 'Eğitim',
           ),
           BottomNavigationBarItem(
               backgroundColor: Colors.teal,
               icon: Icon(MdiIcons.stethoscope),
-              label: 'Muayene İşlemleri'),
+              label: 'Muayene'),
           BottomNavigationBarItem(
               backgroundColor: Colors.lightBlue,
               icon: Icon(MdiIcons.needle),
-              label: 'Aşı İşlemleri'),
+              label: 'Aşı'),
           BottomNavigationBarItem(
               backgroundColor: Colors.deepPurple,
               icon: Icon(Icons.settings),

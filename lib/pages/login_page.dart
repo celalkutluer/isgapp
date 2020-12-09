@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../constants.dart';
 import '../pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:basic_utils/basic_utils.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
+import '../functions.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -120,26 +120,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  encodePass(String pass) {
-    var bytes = utf8
-        .encode(md5.convert(utf8.encode(pass)).toString()); // data being hashed
-    var digest = sha256.convert(bytes); // Hashing Process
-    return base64Encode(utf8.encode(digest.toString()));
-  }
-
-  timeEncode() {
-    var zaman = DateTime.now().millisecondsSinceEpoch.toString();
-    for (var i = 0; i < 3; i++) {
-      zaman = base64Encode(utf8.encode(zaman));
-      zaman = StringUtils.addCharAtPosition(zaman, "c", 3);
-    }
-    return zaman;
-  }
-
   signIn(String email, pass) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var url =
-        "http://celalkutluer.com.tr/services.php?kul_eposta=${base64Encode(utf8.encode(email))}&kul_sifre=${encodePass(pass)}&securityKey=${timeEncode()}";
+        "$BASE_URL?kul_eposta=${base64Encode(utf8.encode(email))}&kul_sifre=${encodePass(pass)}&securityKey=${timeEncode()}";
     var response = await http.get(url);
     print(url);
     if (response.statusCode == 200) {
