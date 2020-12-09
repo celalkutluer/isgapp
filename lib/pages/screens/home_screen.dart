@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../modals/personelGetirAnaSayfa.dart';
 import '../../constants.dart';
 import '../../functions.dart';
-
+import '../../services.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,24 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<personelGetirAnaSayfaModal> _personeller =
       List<personelGetirAnaSayfaModal>();
-  bool isHaveData = true;
+  bool isHaveData = false;
 
-  Future<List<personelGetirAnaSayfaModal>> _getPersonelGetirAnaSayfa() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var _url =
-        "$BASE_URL?kul_id=${sharedPreferences.getString("kul_id")}&kul_token=${sharedPreferences.getString("token")}&securityKey=${timeEncode()}&islem=PersonelGetirAnaSayfa";
-    final _response = await http.get(_url);
-    var personeller = List<personelGetirAnaSayfaModal>();
-    if (_response.statusCode == 200) {
-      final _mapJson = json.decode(_response.body);
-      for (var _mapJson in _mapJson) {
-        personeller.add(personelGetirAnaSayfaModal.fromJson(_mapJson));
-      }
-      return personeller;
-    } else {
-      throw Exception('Failed to load jobs from API');
-    }
-  }
+
 
   TextEditingController editingController = TextEditingController();
 
@@ -42,9 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getPersonelGetirAnaSayfa().then((value) {
+    getPersonelGetirAnaSayfa().then((value) {
       setState(() {
         _personeller.addAll(value);
+        isHaveData=true;
       });
     });
   }
