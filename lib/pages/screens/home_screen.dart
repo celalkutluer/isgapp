@@ -1,12 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
 import '../../modals/personelGetirAnaSayfa.dart';
-import '../../constants.dart';
-import '../../functions.dart';
 import '../../services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,11 +9,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<personelGetirAnaSayfaModal> _personeller =
-      List<personelGetirAnaSayfaModal>();
+  List<HomeScreenPersonelGetirModel> _personeller =
+      List<HomeScreenPersonelGetirModel>();
   bool isHaveData = false;
 
-
+  // void filterSearchResults(String query) {
+  //   List<personelGetirAnaSayfaModal> dummySearchList = List<personelGetirAnaSayfaModal>();
+  //
+  //   dummySearchList.addAll(_personeller);
+  //   if (query.isNotEmpty) {
+  //     List<personelGetirAnaSayfaModal> dummyListData = List<personelGetirAnaSayfaModal>();
+  //     dummySearchList.forEach((item) {
+  //       if (item.contains(query.toUpperCase()) ||
+  //           item.contains(query.toLowerCase())) {
+  //         dummyListData.add(item);
+  //       }
+  //     });
+  //     setState(() {
+  //       items.clear();
+  //       items.addAll(dummyListData);
+  //     });
+  //     return;
+  //   } else {
+  //     setState(() {
+  //       items.clear();
+  //       items.addAll(duplicateItems);
+  //     });
+  //   }
+  // }
 
   TextEditingController editingController = TextEditingController();
 
@@ -75,9 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           leading: Icon(Icons.person),
                           trailing: Icon(Icons.keyboard_arrow_right_sharp),
                           title: Text('TC NO : ' + _personeller[index].perTc),
-                          subtitle: Text(_personeller[index].perAd +
-                              ' ' +
-                              _personeller[index].perSoyad),
+                          subtitle: Text('ADI VE SOYADI : '+_personeller[index].perAdSoyad),
                           dense: true,
                         ),
                       );
