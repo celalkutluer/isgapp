@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:isgapp/pages/screens/personelDetailsScreen.dart';
 import '../../modals/personelGetirAnaSayfa.dart';
 import '../../services.dart';
 
@@ -9,20 +10,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<HomeScreenPersonelGetirModel> _personellerSearchList = List<HomeScreenPersonelGetirModel>();
-  List<HomeScreenPersonelGetirModel> _personellerAllList = List<HomeScreenPersonelGetirModel>();
+  TextEditingController editingController = TextEditingController();
+
+  List<HomeScreenPersonelGetirModel> _personellerSearchList =
+      List<HomeScreenPersonelGetirModel>();
+  List<HomeScreenPersonelGetirModel> _personellerAllList =
+      List<HomeScreenPersonelGetirModel>();
   bool isHaveData = false;
 
   void filterSearchResults(String _query) {
-    _query=_query.replaceAll('i', 'İ');//çetin gibi kelimelerde i harfini tanımamasından ötürü yazıldı.
-    List<HomeScreenPersonelGetirModel> dummySearchList = List<HomeScreenPersonelGetirModel>();
+    _query = _query.replaceAll('i',
+        'İ'); //çetin gibi kelimelerde i harfini tanımamasından ötürü yazıldı.
+    List<HomeScreenPersonelGetirModel> dummySearchList =
+        List<HomeScreenPersonelGetirModel>();
 
     dummySearchList.addAll(_personellerAllList);
 
     if (_query.isNotEmpty) {
-      List<HomeScreenPersonelGetirModel> _dummyListData = List<HomeScreenPersonelGetirModel>();
+      List<HomeScreenPersonelGetirModel> _dummyListData =
+          List<HomeScreenPersonelGetirModel>();
       dummySearchList.forEach((item) {
-        if (item.perAdSoyad.contains(_query.toUpperCase()) || item.perAdSoyad.contains(_query.toLowerCase())) {
+        if (item.perAdSoyad.contains(_query.toUpperCase()) ||
+            item.perAdSoyad.contains(_query.toLowerCase())) {
           _dummyListData.add(item);
         }
       });
@@ -38,8 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
-
-  TextEditingController editingController = TextEditingController();
 
   @override
   void initState() {
@@ -73,6 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       labelText: "Ara",
                       hintText: "İsim Soyisim",
                       prefixIcon: Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        onPressed: () => editingController.clear(),
+                        icon: Icon(Icons.clear),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(10.0),
@@ -89,11 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Card(
                         child: ListTile(
                           onTap: () {
-                            //
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PersonelDetailScreen(
+                                        personelDetails:
+                                            _personellerSearchList[index])));
                           },
                           leading: Icon(Icons.person),
                           trailing: Icon(Icons.keyboard_arrow_right_sharp),
-                          title: Text('TC NO : ' + _personellerSearchList[index].perTc),
+                          title: Text(
+                              'TC NO : ' + _personellerSearchList[index].perTc),
                           subtitle: Text('ADI VE SOYADI : ' +
                               _personellerSearchList[index].perAdSoyad),
                           dense: true,
