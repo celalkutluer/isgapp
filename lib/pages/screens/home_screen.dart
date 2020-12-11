@@ -9,34 +9,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<HomeScreenPersonelGetirModel> _personeller =
-      List<HomeScreenPersonelGetirModel>();
+  List<HomeScreenPersonelGetirModel> _personellerSearchList = List<HomeScreenPersonelGetirModel>();
+  List<HomeScreenPersonelGetirModel> _personellerAllList = List<HomeScreenPersonelGetirModel>();
   bool isHaveData = false;
 
-  // void filterSearchResults(String query) {
-  //   List<personelGetirAnaSayfaModal> dummySearchList = List<personelGetirAnaSayfaModal>();
-  //
-  //   dummySearchList.addAll(_personeller);
-  //   if (query.isNotEmpty) {
-  //     List<personelGetirAnaSayfaModal> dummyListData = List<personelGetirAnaSayfaModal>();
-  //     dummySearchList.forEach((item) {
-  //       if (item.contains(query.toUpperCase()) ||
-  //           item.contains(query.toLowerCase())) {
-  //         dummyListData.add(item);
-  //       }
-  //     });
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(dummyListData);
-  //     });
-  //     return;
-  //   } else {
-  //     setState(() {
-  //       items.clear();
-  //       items.addAll(duplicateItems);
-  //     });
-  //   }
-  // }
+  void filterSearchResults(String _query) {
+    _query=_query.replaceAll('i', 'İ');//çetin gibi kelimelerde i harfini tanımamasından ötürü yazıldı.
+    List<HomeScreenPersonelGetirModel> dummySearchList = List<HomeScreenPersonelGetirModel>();
+
+    dummySearchList.addAll(_personellerAllList);
+
+    if (_query.isNotEmpty) {
+      List<HomeScreenPersonelGetirModel> _dummyListData = List<HomeScreenPersonelGetirModel>();
+      dummySearchList.forEach((item) {
+        if (item.perAdSoyad.contains(_query.toUpperCase()) || item.perAdSoyad.contains(_query.toLowerCase())) {
+          _dummyListData.add(item);
+        }
+      });
+      setState(() {
+        _personellerSearchList.clear();
+        _personellerSearchList.addAll(_dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        _personellerSearchList.clear();
+        _personellerSearchList.addAll(_personellerAllList);
+      });
+    }
+  }
 
   TextEditingController editingController = TextEditingController();
 
@@ -46,8 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getPersonelGetirAnaSayfa().then((value) {
       setState(() {
-        _personeller.addAll(value);
-        isHaveData=true;
+        _personellerAllList.addAll(value);
+        _personellerSearchList.addAll(_personellerAllList);
+        isHaveData = true;
       });
     });
   }
@@ -64,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextField(
                     textCapitalization: TextCapitalization.characters,
                     onChanged: (value) {
-                      //filterSearchResults(value);
+                      filterSearchResults(value);
                     },
                     controller: editingController,
                     decoration: InputDecoration(
@@ -82,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: _personeller.length,
+                    itemCount: _personellerSearchList.length,
                     itemBuilder: (context, index) {
                       return Card(
                         child: ListTile(
@@ -91,8 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           leading: Icon(Icons.person),
                           trailing: Icon(Icons.keyboard_arrow_right_sharp),
-                          title: Text('TC NO : ' + _personeller[index].perTc),
-                          subtitle: Text('ADI VE SOYADI : '+_personeller[index].perAdSoyad),
+                          title: Text('TC NO : ' + _personellerSearchList[index].perTc),
+                          subtitle: Text('ADI VE SOYADI : ' +
+                              _personellerSearchList[index].perAdSoyad),
                           dense: true,
                         ),
                       );
