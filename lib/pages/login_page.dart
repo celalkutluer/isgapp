@@ -131,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
       if (jsonResponse['isLogin'] == true) {
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("kul_id", jsonResponse['kul_id']);
+        sharedPreferences.setString("token_zaman", (DateTime.now().millisecondsSinceEpoch+600000).toString());//10 dk token zaman
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),
                 (Route<dynamic> route) => false);

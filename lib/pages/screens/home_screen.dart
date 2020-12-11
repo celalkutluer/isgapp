@@ -18,28 +18,37 @@ class _HomeScreenState extends State<HomeScreen> {
       List<HomeScreenPersonelGetirModel>();
   bool isHaveData = false;
 
-  void filterSearchResults(String _query) {
-    _query = _query.replaceAll('i',
-        'İ'); //çetin gibi kelimelerde i harfini tanımamasından ötürü yazıldı.
-    List<HomeScreenPersonelGetirModel> dummySearchList =
-        List<HomeScreenPersonelGetirModel>();
-
+/////////////////////////////////////////////////////////////////////////////////36
+  void filterSearchResultsInt(String _query) {
+    List<HomeScreenPersonelGetirModel> dummySearchList =List<HomeScreenPersonelGetirModel>();
+    List<HomeScreenPersonelGetirModel> _dummyListData =List<HomeScreenPersonelGetirModel>();
     dummySearchList.addAll(_personellerAllList);
-
     if (_query.isNotEmpty) {
-      List<HomeScreenPersonelGetirModel> _dummyListData =
-          List<HomeScreenPersonelGetirModel>();
-      dummySearchList.forEach((item) {
-        if (item.perAdSoyad.contains(_query.toUpperCase()) ||
-            item.perAdSoyad.contains(_query.toLowerCase())) {
-          _dummyListData.add(item);
-        }
-      });
-      setState(() {
-        _personellerSearchList.clear();
-        _personellerSearchList.addAll(_dummyListData);
-      });
-      return;
+      if ((int.tryParse(_query) ?? '*') == '*') {
+        _query = _query.replaceAll('i','İ');
+        dummySearchList.forEach((item) {
+          if (item.perAdSoyad.contains(_query.toUpperCase()) ||
+              item.perAdSoyad.contains(_query.toLowerCase())) {
+            _dummyListData.add(item);
+          }
+        });
+        setState(() {
+          _personellerSearchList.clear();
+          _personellerSearchList.addAll(_dummyListData);
+        });
+        return;
+      } else {
+        dummySearchList.forEach((item) {
+          if (item.perTc.contains(_query)) {
+            _dummyListData.add(item);
+          }
+        });
+        setState(() {
+          _personellerSearchList.clear();
+          _personellerSearchList.addAll(_dummyListData);
+        });
+        return;
+      }
     } else {
       setState(() {
         _personellerSearchList.clear();
@@ -73,15 +82,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextField(
                     textCapitalization: TextCapitalization.characters,
                     onChanged: (value) {
-                      filterSearchResults(value);
+                      filterSearchResultsInt(value);
                     },
                     controller: editingController,
                     decoration: InputDecoration(
                       labelText: "Ara",
-                      hintText: "İsim Soyisim",
+                      hintText: "İsim Soyisim veya TC No",
                       prefixIcon: Icon(Icons.search),
                       suffixIcon: IconButton(
-                        onPressed: () => editingController.clear(),
+                        onPressed: () {
+                          editingController.clear();
+                          setState(() {
+                            _personellerSearchList.clear();
+                            _personellerSearchList.addAll(_personellerAllList);
+                          });
+                        },
                         icon: Icon(Icons.clear),
                       ),
                       border: OutlineInputBorder(

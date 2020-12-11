@@ -35,21 +35,27 @@ class _MainPageState extends State<MainPage> {
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getString("token") == null) {
+    print(sharedPreferences.getString("token_zaman"));
+    print(DateTime.now().millisecondsSinceEpoch);
+    if (sharedPreferences.getString("token") == null ||
+        int.parse(sharedPreferences.getString("token_zaman")) <=
+            DateTime.now().millisecondsSinceEpoch) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
           (Route<dynamic> route) => false);
       print('t');
-    }
-    else
-      { Navigator.of(context).pushAndRemoveUntil(
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-              (Route<dynamic> route) => false);}
+          (Route<dynamic> route) => false);
+    }
     print('f');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Container(),);
+    return Scaffold(
+      body: Container(),
+    );
   }
 }
