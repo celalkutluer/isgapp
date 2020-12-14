@@ -1,4 +1,3 @@
-import 'package:isgapp/functions.dart';
 import '../functions.dart';
 
 class HomeScreenPersonelGetirModel {

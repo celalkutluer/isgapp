@@ -4,8 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './constants.dart';
 import './modals/personelGetirAnaSayfa.dart';
 import './functions.dart';
-
-
+import './modals/personelDetayGetir.dart';
 
 Future<List<HomeScreenPersonelGetirModel>> getPersonelGetirAnaSayfa() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -17,6 +16,22 @@ Future<List<HomeScreenPersonelGetirModel>> getPersonelGetirAnaSayfa() async {
     final _mapJson = json.decode(_response.body);
     for (var _mapJson in _mapJson) {
       personeller.add(HomeScreenPersonelGetirModel.fromJson(_mapJson));
+    }
+    return personeller;
+  } else {
+    throw Exception('Failed to load jobs from API');
+  }
+}
+Future<List<PersonelDetayGetirModel>> getPersonelDetayGetir(String per_id) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var _url =
+      "$BASE_URL?kul_id=${sharedPreferences.getString("kul_id")}&kul_token=${sharedPreferences.getString("token")}&securityKey=${timeEncode()}&islem=PersonelDetayGetir&per_id=$per_id";
+  final _response = await http.get(_url);
+  var personeller = List<PersonelDetayGetirModel>();
+  if (_response.statusCode == 200) {
+    final _mapJson = json.decode(_response.body);
+    for (var _mapJson in _mapJson) {
+      personeller.add(PersonelDetayGetirModel.fromJson(_mapJson));
     }
     return personeller;
   } else {

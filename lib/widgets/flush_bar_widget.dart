@@ -8,8 +8,8 @@ Flushbar showFlushBarCopy({BuildContext context}) {
     barBlur: 20,
     borderRadius: 16,
     flushbarPosition: FlushbarPosition.TOP,
-    margin: EdgeInsets.fromLTRB(0, kToolbarHeight/2, 0, 0),
-    duration: Duration(milliseconds: 600),
+    margin: EdgeInsets.fromLTRB(8, kToolbarHeight/2+8, 8, 8),
+    duration: Duration(milliseconds: 750),
     padding: EdgeInsets.all(24),
     dismissDirection: FlushbarDismissDirection.HORIZONTAL,
     backgroundGradient: LinearGradient(

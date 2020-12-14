@@ -46,7 +46,7 @@ if (zamanHesapla(g('securityKey')) >= -5) {
                 // echo "kullanıcı ve token ok-";
                 if (g('islem') == 'PersonelGetirAnaSayfa') {
                     //http://celalkutluer.com.tr/services.php?kul_id=1&token=a&securityKey=a&islem=PersonelGetirAnaSayfa
-                    $veri = $db->prepare('SELECT id,per_tc,per_ad,per_soyad FROM personel ORDER BY per_ad ASC LIMIT 10');
+                    $veri = $db->prepare('SELECT id,per_tc,per_ad,per_soyad FROM personel ORDER BY per_ad ASC LIMIT 50');
                     $veri->execute();
                     $v = $veri->fetchAll(PDO::FETCH_ASSOC);
                     $say = $veri->rowCount();
@@ -57,6 +57,34 @@ if (zamanHesapla(g('securityKey')) >= -5) {
                         $json_array['per_ad_soyad'] = base64_encode($personelGetirAnaSayfa['per_ad'].' '.$personelGetirAnaSayfa['per_soyad']);
                         //$json_array['per_ad'] = base64_encode($personelGetirAnaSayfa['per_ad']);
                         //$json_array['per_soyad'] = base64_encode($personelGetirAnaSayfa['per_soyad']);
+
+                        //here pushing the values in to an array
+                        array_push($json_data, $json_array);
+                    }
+                    //built in PHP function to encode the data in to JSON format
+                    echo json_encode($json_data, JSON_UNESCAPED_UNICODE);
+                }
+                elseif (g('islem') == 'PersonelDetayGetir') {
+                    //http://celalkutluer.com.tr/services.php?kul_id=1&token=a&securityKey=a&islem=PersonelGetirAnaSayfa
+                    $veri = $db->prepare('SELECT personel.id, personel.per_tc,personel.per_ad,personel.per_soyad,birim.birim_ad,altbirim.altbirim_ad,gorev.gorev_ad,egitim_derece.egitim_derece_ad
+FROM personel
+INNER JOIN birim on birim.id=personel.per_birim_id
+INNER JOIN altbirim on  altbirim.id=personel.per_altbirim_id
+INNER JOIN gorev on gorev.id=personel.per_gorev_id
+INNER JOIN egitim_derece on egitim_derece.id=personel.per_egitim_derece_id
+WHERE personel.id =? LIMIT 1');
+                    $veri->execute(array(g('per_id')));
+                    $v = $veri->fetchAll(PDO::FETCH_ASSOC);
+                    $say = $veri->rowCount();
+                    $json_data = array();//create the array
+                    foreach ($v as $personelGetirAnaSayfa) {
+                        $json_array['id'] = base64_encode($personelGetirAnaSayfa['id']);
+                        $json_array['per_tc'] = base64_encode($personelGetirAnaSayfa['per_tc']);
+                        $json_array['per_ad_soyad'] = base64_encode($personelGetirAnaSayfa['per_ad'].' '.$personelGetirAnaSayfa['per_soyad']);
+                        $json_array['birim'] = base64_encode($personelGetirAnaSayfa['birim_ad']);
+                        $json_array['altbirim'] = base64_encode($personelGetirAnaSayfa['altbirim_ad']);
+                        $json_array['gorev'] = base64_encode($personelGetirAnaSayfa['gorev_ad']);
+                        $json_array['egitim'] = base64_encode($personelGetirAnaSayfa['egitim_derece_ad']);
 
                         //here pushing the values in to an array
                         array_push($json_data, $json_array);
@@ -82,11 +110,11 @@ if (zamanHesapla(g('securityKey')) >= -5) {
 
     }
 } else {
-    $json_array['isApiSecurity'] = true;
-    $json_array['status'] = 'Hack attack detected.';
-    $json_array['attackIP'] = ipAl();
+        $json_array['isApiSecurity'] = true;
+        $json_array['status'] = 'Hack attack detected.';
+        $json_array['attackIP'] = ipAl();
 
-    echo json_encode($json_array, JSON_UNESCAPED_UNICODE);
+        echo json_encode($json_array, JSON_UNESCAPED_UNICODE);
 }
 
 mysqli_close($db);
