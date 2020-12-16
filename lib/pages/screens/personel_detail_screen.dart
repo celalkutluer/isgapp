@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:isgapp/pages/screens/edu_detail_screen.dart';
+import 'package:isgapp/pages/screens/exam_detail_screen.dart';
+import 'package:isgapp/pages/screens/vaccine_detail_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../modals/personelDetayGetir.dart';
 import '../../services.dart';
@@ -26,17 +29,25 @@ class _PersonelDetailScreenState extends State<PersonelDetailScreen> {
     super.initState();
     getPersonelDetayGetir(widget.personelDetails.id).then((value) {
       setState(() {
-        _personellerDetails.addAll(value);
         isHaveData = true;
+        _personellerDetails.addAll(value);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!isHaveData) {
+      getPersonelDetayGetir(widget.personelDetails.id).then((value) {
+        setState(() {
+          isHaveData = true;
+          _personellerDetails.addAll(value);
+        });
+      });
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personel Detay'),
+        title: Text('Personel Detay - ' + widget.personelDetails.perAdSoyad),
       ),
       body: isHaveData
           ? Center(
@@ -121,15 +132,21 @@ class _PersonelDetailScreenState extends State<PersonelDetailScreen> {
                                   children: <Widget>[
                                     Flexible(
                                       child: ListTile(
-                                        leading: Icon(Icons.school,
-                                            size: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                16),
+                                        leading: Icon(Icons.school),
                                         title: Text(
                                           'Eğitim İşlemleri',
                                         ),
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EducationDetailScreen(
+                                                        personelDetails:
+                                                            _personellerDetails[
+                                                                0],
+                                                      )));
+                                        },
                                       ),
                                     ),
                                   ],
@@ -141,13 +158,19 @@ class _PersonelDetailScreenState extends State<PersonelDetailScreen> {
                                   children: <Widget>[
                                     Flexible(
                                       child: ListTile(
-                                        leading: Icon(MdiIcons.stethoscope,
-                                            size: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                16),
+                                        leading: Icon(MdiIcons.stethoscope),
                                         title: Text('Muayene İşlemleri'),
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ExaminationDetailScreen(
+                                                        personelDetails:
+                                                            _personellerDetails[
+                                                                0],
+                                                      )));
+                                        },
                                       ),
                                     ),
                                   ],
@@ -159,13 +182,19 @@ class _PersonelDetailScreenState extends State<PersonelDetailScreen> {
                                   children: <Widget>[
                                     Flexible(
                                       child: ListTile(
-                                        leading: Icon(MdiIcons.needle,
-                                            size: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                16),
+                                        leading: Icon(MdiIcons.needle),
                                         title: Text('Aşı İşlemleri'),
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VaccineDetailScreen(
+                                                        personelDetails:
+                                                            _personellerDetails[
+                                                                0],
+                                                      )));
+                                        },
                                       ),
                                     ),
                                   ],
@@ -179,7 +208,9 @@ class _PersonelDetailScreenState extends State<PersonelDetailScreen> {
               ),
             )
           : Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              ),
             ),
     );
   }

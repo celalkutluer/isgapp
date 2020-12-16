@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:isgapp/pages/screens/personelDetailsScreen.dart';
+import 'package:isgapp/pages/screens/personel_detail_screen.dart';
 import '../../modals/personelGetirAnaSayfa.dart';
 import '../../services.dart';
 
@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController editingController = TextEditingController();
+  TextEditingController searchTextFieldTEC = TextEditingController();
 
   List<HomeScreenPersonelGetirModel> _personellerSearchList =
       List<HomeScreenPersonelGetirModel>();
@@ -63,48 +63,78 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getPersonelGetirAnaSayfa().then((value) {
       setState(() {
+        isHaveData = true;
         _personellerAllList.addAll(value);
         _personellerSearchList.addAll(_personellerAllList);
-        isHaveData = true;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!isHaveData) {
+      getPersonelGetirAnaSayfa().then((value) {
+        setState(() {
+          isHaveData = true;
+          _personellerAllList.addAll(value);
+          _personellerSearchList.addAll(_personellerAllList);
+        });
+      });
+    }
     return Center(
       child: isHaveData
-          ? Column(
+          ?
+      Column(
               children: [
                 SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextField(
-                    textCapitalization: TextCapitalization.characters,
-                    onChanged: (value) {
-                      filterSearchResultsInt(value);
-                    },
-                    controller: editingController,
-                    decoration: InputDecoration(
-                      labelText: "Ara",
-                      hintText: "İsim Soyisim veya TC No",
-                      prefixIcon: Icon(Icons.search),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          editingController.clear();
-                          setState(() {
-                            _personellerSearchList.clear();
-                            _personellerSearchList.addAll(_personellerAllList);
-                          });
-                        },
-                        icon: Icon(Icons.clear),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          textCapitalization: TextCapitalization.characters,
+                          onChanged: (value) {
+                            filterSearchResultsInt(value);
+                          },
+                          controller: searchTextFieldTEC,
+                          decoration: InputDecoration(
+                            labelText: "Ara",
+                            hintText: "İsim Soyisim veya TC No",
+                            prefixIcon: Icon(Icons.search),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                searchTextFieldTEC.clear();
+                                setState(() {
+                                  _personellerSearchList.clear();
+                                  _personellerSearchList.addAll(_personellerAllList);
+                                });
+                              },
+                              icon: Icon(Icons.clear),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+
+                      IconButton(onPressed: () {
+                        setState(() {
+                          isHaveData=false;
+                          getPersonelGetirAnaSayfa().then((value) {
+                            setState(() {
+                              isHaveData = true;
+                              _personellerAllList.addAll(value);
+                              _personellerSearchList.addAll(_personellerAllList);
+                            });
+                          });
+                        });
+                        searchTextFieldTEC.clear();
+                      },icon: Icon(Icons.refresh),color: Colors.grey,)
+                    ],
                   ),
                 ),
                 SizedBox(height: 10),
@@ -136,7 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             )
-          : CircularProgressIndicator(),
+          :
+      CircularProgressIndicator(backgroundColor: Colors.blue,),
     );
   }
 }
