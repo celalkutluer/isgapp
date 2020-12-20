@@ -3,7 +3,7 @@
 $host="localhost";
 $dbname="id11425759_isg";
 $kullanici="id11425759_celalkutluer";
-$sifre="Aa123456.Aa123456";
+$sifre="*************";
 
 try
 {
